@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NavCore GPS Dashboard</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+    NavCore
+  </div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-status">
+    <div class="status-dot"></div>
+    API Active
+  </div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-status">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    MapQuest Routing Engine
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-time" id="clock">--:--:--</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <!-- ── ROUTE PANEL ── -->
+    <div class="panel active" id="panel-route">
+      <div>
+        <div class="panel-title">GPS Route Planner</div>
+        <div class="panel-sub">Powered by MapQuest Directions API</div>
+      </div>
+
+      <!-- FROM -->
+      <div>
+        <div class="field-label">From — Origin</div>
+        <div class="input-wrap">
+          <div class="input-dot dot-blue"></div>
+          <input type="text" id="origin" placeholder="Enter starting location…" autocomplete="off"/>
+        </div>
+      </div>
+
+      <div class="connector"><div class="connector-line"></div></div>
+
+      <!-- TO -->
+      <div>
+        <div class="field-label">To — Destination</div>
+        <div class="input-wrap">
+          <div class="input-dot dot-amber"></div>
+          <input type="text" id="destination" placeholder="Enter destination…" autocomplete="off"/>
+        </div>
+      </div>
+
+      <!-- GET DIRECTIONS BUTTON -->
+      <button class="btn-primary" id="btn-directions" onclick="getDirections()">
+        <div class="spinner" id="spinner-dir"></div>
+        <svg id="btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+        Get Directions
+      </button>
+
+      <!-- RESULTS SECTION -->
+      <div class="results-section" id="results-section">
+        <!-- Metrics -->
+        <div class="section-head">Route Summary</div>
+        <div class="metrics-row" id="metrics-row">
+          <div class="metric-card">
+            <div class="metric-val" id="m-dist">—</div>
+            <div class="metric-unit">Kilometers</div>
+            <div class="metric-label">Distance</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val" id="m-time">—</div>
+            <div class="metric-unit">Minutes</div>
+            <div class="metric-label">Duration</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val" id="m-fuel">—</div>
+            <div class="metric-unit">Route</div>
+            <div class="metric-label">Recommended</div>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="section-head" style="margin-top:14px;">Route Data (All Modes)</div>
+        <table class="data-table">
+          <tbody id="route-table">
+          </tbody>
+        </table>
+
+        <!-- Turn-by-turn -->
+        <div class="section-head" style="margin-top:14px;">Turn-by-Turn Directions</div>
+        <div class="steps-list" id="steps-list"></div>
+
+        <!-- Clear -->
+        <button class="btn-secondary" onclick="clearRoute()" style="margin-top:4px;">Clear Route</button>
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div class="empty-state" id="empty-state-route">
+        <div class="empty-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h3>Plan your route</h3>
+        <p>Enter a starting point and destination to see travel times, distance, and turn-by-turn directions.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MAP -->
+  <div id="map"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  <span id="toast-msg">Error</span>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
